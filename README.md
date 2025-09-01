@@ -22,3 +22,8 @@
 - Developed, established and executed quality control procedures for flow cytometry workflow within OSU’s Shared Resource Library used by 30 university laboratories
 
 ## Projects
+### RNA Sequencing Data Analysis
+
+Utilized R to develop a pipeline for analyzing RNA sequencing data from a publically available source. With the help of R's built-in packages, significant differentailly expressed genes were able to be visualized through PCA, volcano plots, heat maps, and gene set enrichment analsis.
+
+###
