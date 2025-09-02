@@ -28,4 +28,20 @@ Utilized R to analyze RNA sequencing data from a publically available source. Wi
 
 ### Fully automating analysis pipeline for COSMIC Actionability file
 
-Developed a pipeline to automate an analyis pipeline for a COSMIC Actionability file to look at the use of different drugs/drug combinations to target mutations in cancer and different diseases. 
+Developed a pipeline to automate an analyis pipeline for a COSMIC Actionability file to look at the use of different drugs/drug combinations to target mutations in cancer and different diseases. Using search terms for disease, gene, and drug and obtaining their results, KEGG pathway maps were visualized of the affected pathways of the search terms. The goal is to see the affected pathways/genes within a certain disease and the drugs used in therapies for selected disease.
+
+### Counting number of sequences that match between SAM and GTF file
+Parsed the results of an alignment (called a SAM file) and compared it to a file that contains gene annotations (GTF). The goal is to count the number of sequences in the SAM file that match each of the genes in the GTF file with and without sorting the SAM file to learn the pros and cons of different sorting algorithms and their affect on time complexity.
+
+### Creating string matching functions
+Wrote a script that implements the Rabin-Karp algorithm for string matching a pattern to text with a DNA alphabet of A, G, C, T.
+
+Found the minimum shift operation required to get the common prefix of maximum length from two strings (input: string1, string2, prefix and output: amount of shift and prefix)
+
+### Implementing search algorithms (Breadth-First Search and Depth-First Search)
+Used a gene network graph from Biogrid (https://thebiogrid.org/) for the species Arabidopsis thaliana to implement a breadth-first search algorithm. The algorithm initialized vertices, processed the queue correctly, and updated colors, distances, and parents appropriately. Then, the shortest path was determined using results from the Breadth-first search.
+
+Determined if a graph contains a cycle returning 1 if a cycle is present. Utilized a recursion stack to detect cycles in directed graph for the use of a DFS.
+
+
+
