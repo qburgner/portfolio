@@ -28,7 +28,7 @@ Utilized R to analyze RNA sequencing data from a publicly available source. With
 
 ### Fully automating analysis pipeline for COSMIC Actionability file
 
-Developed a pipeline to automate an analyis pipeline in Python for a COSMIC Actionability file to look at the use of different drugs/drug combinations to target mutations in cancer and different diseases. Using search terms for disease, gene, and drug and obtaining their results, KEGG pathway maps were visualized of the affected pathways of the search terms. The goal is to see the affected pathways/genes within a certain disease and the drugs used in therapies for selected disease.
+Developed a pipeline to automate an analysis in Python for a COSMIC Actionability file to look at the use of different drugs/drug combinations to target mutations in cancer and different diseases. Using search terms for disease, gene, and drug and obtaining their results, KEGG pathway maps were visualized of the affected biological systems. The goal is to see the affected pathways/genes within a certain disease and the drugs used in therapies for the selected disease and potential ones for future treatments.
 
 ### Counting number of sequences that match between SAM and GTF file
 Parsed the results of an alignment (called a SAM file) and compared it to a file that contains gene annotations (GTF). The goal is to count the number of sequences in the SAM file that match each of the genes in the GTF file with and without sorting the SAM file to learn the pros and cons of different sorting algorithms and their affect on time complexity.
