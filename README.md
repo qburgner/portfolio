@@ -24,7 +24,7 @@
 ## Projects
 ### RNA Sequencing Data Analysis
 
-Utilized R to analyze RNA sequencing data from a publically available source. With the help of R's built-in packages, significant differentailly expressed genes were able to be visualized through PCA, volcano plots, heat maps, and gene set enrichment analysis.
+Utilized R to analyze RNA sequencing data from a publicly available source. With the help of R's built-in packages, significant differentially expressed genes were able to be visualized through PCA, volcano plots, heat maps, and gene set enrichment analysis.
 
 ### Fully automating analysis pipeline for COSMIC Actionability file
 
