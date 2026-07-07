@@ -1,0 +1,229 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fnil\fcharset0 Menlo-Regular;\f2\froman\fcharset0 Times-Roman;
+\f3\fnil\fcharset0 Menlo-Bold;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue0;\red0\green0\blue0;
+\red255\green255\blue255;\red27\green31\blue35;\red46\green174\blue187;\red64\green11\blue217;\red159\green160\blue28;
+\red47\green180\blue29;\red180\green36\blue25;\red200\green20\blue201;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c0\c0\c0;\cssrgb\c0\c1\c1;
+\cssrgb\c100000\c100000\c99985\c0;\cssrgb\c14207\c16177\c18085;\cssrgb\c20199\c73241\c78251;\cssrgb\c32309\c18666\c88229;\cssrgb\c68469\c68012\c14211;
+\cssrgb\c20241\c73898\c14950;\cssrgb\c76411\c21697\c12527;\cssrgb\c83397\c23074\c82666;\csgray\c100000;}
+\margl1440\margr1440\vieww11940\viewh9700\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 To download the fastqs:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\b0\fs22 \cf2 \CocoaLigature0 cp -r /projects/work/course/BI7653/project.2026 .\
+sbatch download.sh\
+\
+
+\f0\b\fs24 To download the \cf3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 recommended reference transcriptome and annotation file:\
+
+\f1\b0\fs22 \cf4 \cb5 \outl0\strokewidth0 \strokec6 latest_release=$(curl -s 'http://rest.ensembl.org/info/software?content-type=application/json' | grep -o '"release":[0-9]*' | cut -d: -f2)\
+wget -L ftp://ftp.ensembl.org/pub/release-$\{latest_release\}/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz\
+wget -L ftp://ftp.ensembl.org/pub/release-$\{latest_release\}/gtf/homo_sapiens/Homo_sapiens.GRCh38.$\{latest_release\}.gtf.gz
+\f2 \cf3 \cb1 \outl0\strokewidth0 \
+
+\f1 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 #!/bin/bash\cf2 \
+\cf7 #\cf2 \
+\cf7 #SBATCH --nodes=1\cf2 \
+\cf7 #SBATCH --tasks-per-node=1\cf2 \
+\cf7 #SBATCH --cpus-per-task=8\cf2 \
+\cf7 #SBATCH --time=12:00:00\cf2 \
+\cf7 #SBATCH --mem=32G\cf2 \
+\cf7 #SBATCH --job-name=ngs_final_project\cf2 \
+\cf7 #SBATCH --account=torch_pr_473_general\cf2 \
+\cf7 #SBATCH --mail-type=FAIL\cf2 \
+\cf7 #SBATCH --mail-user=qb2060@nyu.edu\cf2 \
+\cf7 #SBATCH --output=slurm-%j.out\cf2 \
+\
+\cf7 # Exit the pipeline on error, variable issues, or failure\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\b \cf8 set
+\f1\b0 \cf2  -euo pipefail\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 # ==================================================\cf2 \
+\cf7 # Build Sample Sheet (single-end format for nf-core)\cf2 \
+\cf7 # ==================================================\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "============================"
+\f1\b0 \cf2 \
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "Build samplesheet"
+\f1\b0 \cf2 \
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "============================"
+\f1\b0 \cf2 \
+\
+samplesheet\cf10 =\cf2 /scratch/qb2060/project.2026/samplesheet.csv\
+\
+
+\f3\b \cf8 cat
+\f1\b0 \cf2  \cf10 >\cf2  
+\f3\b \cf11 $\{samplesheet\}
+\f1\b0 \cf2  \cf10 <<\cf2  EOF\
+sample,fastq_1,fastq_2,strandedness\
+control1,/scratch/qb2060/project.2026/SRR7819990.fastq.gz,,auto\
+control2,/scratch/qb2060/project.2026/SRR7819991.fastq.gz,,auto\
+control3,/scratch/qb2060/project.2026/SRR7819992.fastq.gz,,auto\
+treatment1,/scratch/qb2060/project.2026/SRR7819993.fastq.gz,,auto\
+treatment2,/scratch/qb2060/project.2026/SRR7819994.fastq.gz,,auto\
+treatment3,/scratch/qb2060/project.2026/SRR7819995.fastq.gz,,auto\
+EOF\
+\
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "Samplesheet created as $\{samplesheet\}:"
+\f1\b0 \cf2 \
+
+\f3\b \cf8 cat
+\f1\b0 \cf2  
+\f3\b \cf11 $\{samplesheet\}
+\f1\b0 \cf2 \
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  _ESTATUS_ \cf10 [\cf2  samplesheet \cf10 ]:\cf2  
+\f3\b \cf11 $?
+\f1\b0 \cf2 \
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "Script Complete: $(date)"
+\f1\b0 \cf2 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 # ==================================================\cf2 \
+\cf7 # Create custom config with increased Salmon memory\cf2 \
+\cf7 # ==================================================\cf2 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "============================"
+\f1\b0 \cf2 \
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "Creating custom rnaseq.config"
+\f1\b0 \cf2 \
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "============================"
+\f1\b0 \cf2 \
+\
+
+\f3\b \cf8 cat
+\f1\b0 \cf2  \cf10 >\cf2  /scratch/qb2060/project.2026/rnaseq.config \cf10 <<\cf2  EOF\
+process \cf10 \{\cf2 \
+    executor \cf10 =\cf2  
+\f3\b \cf9 'slurm'
+\f1\b0 \cf2 \
+    clusterOptions \cf10 =\cf2  
+\f3\b \cf9 '--export=NONE --account=torch_pr_473_general'
+\f1\b0 \cf2 \
+    maxRetries \cf10 =\cf2  3\
+    scratch \cf10 =\cf2  false\
+\
+    withName\cf10 :\cf2  
+\f3\b \cf9 '.*SALMON_QUANT.*'
+\f1\b0 \cf2  \cf10 \{\cf2 \
+        memory \cf10 =\cf2  
+\f3\b \cf9 '32.GB'
+\f1\b0 \cf2 \
+        cpus \cf10 =\cf2  8\
+        \cf10 time\cf2  \cf10 =\cf2  
+\f3\b \cf9 '4.h'
+\f1\b0 \cf2 \
+    \cf10 \}\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 \}\cf2 \
+EOF\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "rnaseq.config created:"
+\f1\b0 \cf2 \
+
+\f3\b \cf8 cat
+\f1\b0 \cf2  /scratch/qb2060/project.2026/rnaseq.config\
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  _ESTATUS_ \cf10 [\cf2  rnaseq config \cf10 ]:\cf2  
+\f3\b \cf11 $?
+\f1\b0 \cf2 \
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "Script Complete: $(date)"
+\f1\b0 \cf2 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 # ==================================================\cf2 \
+\cf7 # Running nf-core/rnaseeq pipeline (Salmon mapping-based mode)\cf2 \
+\cf7 # ==================================================\cf2 \
+\
+module purge\
+module load nextflow/25.10.2\
+\
+\cf7 # run the nf-core RNAseq pipeline with correct inputs/outputs\cf2 \
+\cf7 # be sure to have the needed salmon args and save reference\cf2 \
+nextflow run nf-core/rnaseq
+\f3\b \cf12  -r
+\f1\b0 \cf2  3.14.0 \cf10 \\\cf2 \
+
+\f3\b \cf12         --input
+\f1\b0 \cf2  
+\f3\b \cf11 $\{samplesheet\}
+\f1\b0 \cf2  \cf10 \\\cf2 \
+
+\f3\b \cf12         --outdir
+\f1\b0 \cf2  res \cf10 \\\cf2 \
+
+\f3\b \cf12         --fasta
+\f1\b0 \cf2  /scratch/qb2060/project.2026/Homo_sapiens.GRCh38.dna_sm.primary\cf13 \cb2 >\cf2 \cb1 \
+
+\f3\b \cf12         --gtf
+\f1\b0 \cf2  /scratch/qb2060/project.2026/Homo_sapiens.GRCh38.115.gtf.gz \cf10 \\\cf2 \
+        --extra_salmon_quant_args 
+\f3\b \cf9 ' --gcBias'
+\f1\b0 \cf2  \cf10 \\\cf2 \
+        --save_reference \cf10 \\\cf2 \
+        -profile nyu_hpc \cf10 \\\cf2 \
+
+\f3\b \cf12         -c
+\f1\b0 \cf2  /scratch/qb2060/project.2026/rnaseq.config \cf10 \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2         -params-file /scratch/qb2060/project.2026/rnaseq.json\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  _ESTATUS_ \cf10 [\cf2  nextflow \cf10 ]:\cf2  
+\f3\b \cf11 $?
+\f1\b0 \cf2 \
+\
+
+\f3\b \cf8 echo
+\f1\b0 \cf2  
+\f3\b \cf9 "Script Complete: $(date)"
+\f1\b0 \cf2 \
+}
